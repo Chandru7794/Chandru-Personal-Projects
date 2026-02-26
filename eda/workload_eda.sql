@@ -301,3 +301,141 @@ FROM workload_deduped;
 
 
 
+----Combined Session EDA
+----Logic: sessions in the same workflow (media_title, video_type, video_subtype, creation_category)
+----       are combined when the gap from the end of the previous to the start of the current is <= 15 min.
+----       ts_end is computed as ts_start + duration to handle midnight-crossing sessions correctly.
+
+
+
+DROP TABLE IF EXISTS workload_islands;
+
+CREATE TABLE workload_islands AS
+WITH base AS (
+    SELECT
+        *,
+        (date + time_start::TIME)                                     AS ts_start,
+        (date + time_start::TIME) + (duration * INTERVAL '1 minute')  AS ts_end_computed
+    FROM workload_deduped
+),
+with_gap AS (
+    SELECT
+        *,
+        DATEDIFF('minute',
+            LAG(ts_end_computed) OVER (
+                PARTITION BY media_title, video_type, video_subtype, creation_category
+                ORDER BY ts_start
+            ),
+            ts_start
+        ) AS gap_from_prev_minutes
+    FROM base
+),
+with_island AS (
+    SELECT
+        *,
+        SUM(CASE WHEN gap_from_prev_minutes IS NULL OR gap_from_prev_minutes > 15 THEN 1 ELSE 0 END)
+            OVER (
+                PARTITION BY media_title, video_type, video_subtype, creation_category
+                ORDER BY ts_start
+                ROWS UNBOUNDED PRECEDING
+            ) AS island_id
+    FROM with_gap
+)
+SELECT * FROM with_island;
+
+
+SELECT * FROM workload_islands;
+
+
+
+---A) Frequency distribution: how many original sessions get grouped together
+---   Sessions_combined=1 means the session was never combined with anything
+SELECT
+    sessions_combined,
+    COUNT(*)                                                                             AS num_groups,
+    SUM(sessions_combined)                                                               AS total_raw_sessions,
+    ROUND(SUM(sessions_combined) * 100.0 / (SELECT COUNT(*) FROM workload_deduped), 2) AS pct_of_total_sessions
+FROM (
+    SELECT
+        media_title, video_type, video_subtype, creation_category, island_id,
+        COUNT(*) AS sessions_combined
+    FROM workload_islands
+    GROUP BY media_title, video_type, video_subtype, creation_category, island_id
+) sizes
+GROUP BY sessions_combined
+ORDER BY sessions_combined;
+
+---66% are solo sessions, 23% have 2 sessions, 9.5% have 3 or 4 sessions and last 1.5 sessions have 5-7 sessions
+
+
+
+---B) Examples: show the raw rows that make up combined sessions (groups of 2+)
+---   Pulls the first 10 combined groups found, displaying all their constituent rows
+SELECT
+    wi.media_title,
+    wi.video_type,
+    wi.video_subtype,
+    wi.creation_category,
+    wi.island_id,
+    grp.sessions_combined,
+    wi.date,
+    wi.time_start,
+    wi.time_end,
+    wi.duration,
+    wi.ts_start,
+    wi.ts_end_computed,
+    wi.gap_from_prev_minutes
+FROM workload_islands wi
+JOIN (
+    SELECT
+        media_title, video_type, video_subtype, creation_category, island_id,
+        COUNT(*) AS sessions_combined
+    FROM workload_islands
+    GROUP BY media_title, video_type, video_subtype, creation_category, island_id
+    HAVING COUNT(*) >= 2
+    ORDER BY sessions_combined DESC, media_title, video_type, video_subtype, creation_category, island_id
+    LIMIT 10
+) grp
+    ON  wi.media_title       = grp.media_title
+    AND wi.video_type        = grp.video_type
+    AND wi.video_subtype     = grp.video_subtype
+    AND wi.creation_category = grp.creation_category
+    AND wi.island_id         = grp.island_id
+ORDER BY grp.sessions_combined DESC, wi.media_title, wi.video_type, wi.video_subtype, wi.creation_category, wi.island_id, wi.ts_start;
+
+
+---C) Collapsed combined sessions — one row per combined group (all sessions, singles included)
+---   Aggregation rules per views.md:
+---     time_start = MIN(time_start)         earliest start in the group
+---     time_end   = MAX(time_start)         start of the last session in the group (per spec)
+---     duration   = SUM(duration)           total work time across all sessions
+
+DROP TABLE IF EXISTS workload_combined;
+
+CREATE TABLE workload_combined AS
+SELECT
+    media_title,
+    video_type,
+    video_subtype,
+    creation_category,
+    island_id,
+    COUNT(*)          AS sessions_combined,
+    MIN(date)         AS date,
+    MIN(month_year)   AS month_year,
+    MIN(media_type)   AS media_type,
+    MIN(media_series) AS media_series,
+    MIN(time_start)   AS time_start,
+    MAX(time_start)   AS time_end,
+    SUM(duration)     AS duration
+FROM workload_islands
+GROUP BY media_title, video_type, video_subtype, creation_category, island_id;
+
+--- Verify against B: same top-10 groups, now shown as 1 collapsed row each
+SELECT *
+FROM workload_combined
+WHERE sessions_combined >= 2
+ORDER BY sessions_combined DESC, media_title, video_type, video_subtype, creation_category, island_id
+LIMIT 10;
+
+
+
