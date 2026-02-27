@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: main
+    description: >
+      Raw workload table loaded from Workload.csv into DuckDB.
+      Load with: CREATE TABLE workload AS SELECT * FROM 'data/Workload.csv';
+    tables:
+      - name: workload
+        description: "One row per logged work session, as exported from the manual workload spreadsheet. Loaded from Workload.csv via scripts/load_raw.py."

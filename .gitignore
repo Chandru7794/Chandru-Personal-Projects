@@ -1,0 +1,21 @@
+# dbt artifacts
+transform/target/
+transform/dbt_packages/
+transform/logs/
+transform/profiles.yml
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# DuckDB persistent file (large binary, regenerated from CSV)
+data/*.duckdb
+
+# OS
+.DS_Store
+Thumbs.db
