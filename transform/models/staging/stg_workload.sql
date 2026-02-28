@@ -2,7 +2,7 @@
 -- Applies all cleaning logic from the EDA (stages 1-5):
 --   1. Normalise media_type and creation_category, convert time strings to 24hr
 --   2. Drop invalid / out-of-scope rows
---   3. Forward-fill null dates, derive month_year
+--   3. Forward-fill null dates
 --   4. Fix negative durations (midnight-crossing sessions)
 --   5. Deduplicate via DISTINCT
 
@@ -51,7 +51,7 @@ WITH cleaned AS (
         AND media_title NOT IN ('None', 'Entire Channel')
         AND video_type IS NOT NULL
         AND video_subtype NOT IN ('Multiple', 'N/A')
-        AND TRIM(LOWER(media_type)) != 'channel'
+        AND TRIM(media_type) != 'Channel'
         AND creation_category NOT IN (
             'Monetization', 'Research Youtube', 'Banner',
             'Promoting', 'Video Games', 'Reporting', 'SEO', 'Stats'
@@ -74,15 +74,7 @@ dates_filled AS (
                 ORDER BY rn
                 ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
             )
-            AS date_workflow,
-        STRFTIME(
-            LAST_VALUE(date IGNORE NULLS)
-                OVER (
-                    ORDER BY rn
-                    ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
-                ),
-            '%Y_%m'
-        ) AS month_year
+            AS date_workflow
     FROM numbered
 ),
 
@@ -95,5 +87,16 @@ durations_fixed AS (
     FROM dates_filled
 )
 
-SELECT DISTINCT *
+SELECT DISTINCT
+    media_title,
+    video_type,
+    video_subtype,
+    creation_category,
+    date_workflow,
+    time_start,
+    time_end,
+    duration,
+    media_type,
+    media_series
 FROM durations_fixed
+ORDER BY date_workflow::DATE, time_start
