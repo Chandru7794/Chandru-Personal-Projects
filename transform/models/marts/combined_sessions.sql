@@ -26,7 +26,7 @@ with_gap AS (
             'minute',
             LAG(ts_end_computed) OVER (
                 PARTITION BY
-                    media_title, video_type, video_subtype, creation_category
+                    video_id, creation_category
                 ORDER BY ts_start
             ),
             ts_start
@@ -47,13 +47,14 @@ with_session AS (
             END
         ) OVER (
             PARTITION BY
-                media_title, video_type, video_subtype, creation_category
+                video_id, creation_category
             ORDER BY ts_start
             ROWS UNBOUNDED PRECEDING
         ) AS session_id
     FROM with_gap
 )
 SELECT -- noqa: LT08
+    video_id,
     media_title,
     video_type,
     video_subtype,
@@ -67,5 +68,5 @@ SELECT -- noqa: LT08
     MAX(time_end) AS time_end,
     SUM(duration) AS duration
 FROM with_session
-GROUP BY media_title, video_type, video_subtype, creation_category, session_id
+GROUP BY video_id, creation_category, session_id
 ORDER BY MIN(date_workflow)::DATE, MIN(time_start)

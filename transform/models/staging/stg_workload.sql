@@ -97,6 +97,7 @@ SELECT DISTINCT
     time_end,
     duration,
     media_type,
-    media_series
+    media_series,
+    MD5(media_title || '|' || video_type || '|' || video_subtype) AS video_id
 FROM durations_fixed
 ORDER BY date_workflow::DATE, time_start
