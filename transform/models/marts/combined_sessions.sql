@@ -55,9 +55,11 @@ with_session AS (
 )
 SELECT -- noqa: LT08
     video_id,
-    media_title,
-    video_type,
-    video_subtype,
+    -- several columns are constant within a video_id group;
+    -- MIN() is used to satisfy GROUP BY without adding redundant keys
+    MIN(media_title) AS media_title,
+    MIN(video_type) AS video_type,
+    MIN(video_subtype) AS video_subtype,
     creation_category,
     session_id,
     MIN(date_workflow)::DATE AS date_workflow,
