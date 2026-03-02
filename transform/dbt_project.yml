@@ -1,0 +1,21 @@
+name: youtube_workload
+version: '1.0.0'
+config-version: 2
+
+profile: youtube_workload
+
+model-paths: ["models"]
+seed-paths:  ["seed"]
+test-paths:  ["tests"]
+log-path:    "logs"
+
+clean-targets:
+  - target
+  - dbt_packages
+
+models:
+  youtube_workload:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: view

@@ -11,7 +11,7 @@
 
 The YouTube Workload dataset tracks the time and effort spent on individual video production tasks across a personal YouTube channel. The raw data contained a meaningful number of data quality issues — primarily typographical errors in categorical fields, inconsistent labeling conventions, and a small number of structurally invalid rows. All issues were identifiable and correctable through rule-based cleaning.
 
-All identified data quality issues have been fully resolved. The authoritative table for downstream feature engineering and predictive modeling is `workload_deduped`, produced at the end of a four-stage cleaning pipeline documented in Section 7.
+All identified data quality issues have been fully resolved. The cleaning pipeline produces `workload_deduped` after four stages of normalization and deduplication. A subsequent combined-session analysis (Section 8) groups consecutive same-workflow sessions separated by ≤15 minutes into single logical work blocks, producing the final modeling-ready table `workload_combined`.
 
 ---
 
@@ -40,7 +40,7 @@ All identified data quality issues have been fully resolved. The authoritative t
 **Issue type:** Typographical errors (most prevalent column), irrelevant categories
 This was the most data quality-intensive column. Two classes of issues were found:
 
-**Typos mapped to canonical values:**
+**Typos or over-descriptive names mapped to canonical values:**
 
 | Raw Value(s) | Mapped To |
 |---|---|
@@ -108,7 +108,7 @@ This was the most data quality-intensive column. Two classes of issues were foun
 
 **Format:** Stored as 12-hour AM/PM strings (e.g., `"10:00:00 PM"`). Converted to 24-hour `HH:MM:SS` strings in `workload_clean` for correct lexicographic sorting and downstream compatibility.
 
-**Midnight sessions:** ~0.9% of records start between 12:00 AM and 4:00 AM. Investigation confirmed this is no longer an issue — corrected in the source data.
+**Midnight sessions:** ~0.9% of records start between 12:00 AM and 4:00 AM. Originally there was an issue with these records having the wrong date. Investigation confirmed this is no longer an issue — corrected in the source data.
 
 ---
 
@@ -173,11 +173,13 @@ The raw CSV passes through four sequential cleaning stages before reaching the m
 
 ```
 Workload.csv
-    └── workload              (raw load)
-        └── workload_clean    (stage 1: column normalization + row filters)
-            └── workload_dates_filled   (stage 2: null date fill + month_year)
-                └── workload_durations_fixed  (stage 3: duration correction)
-                    └── workload_deduped      (stage 4: deduplication) ← use this
+    └── workload                   (raw load)
+        └── workload_clean         (stage 1: column normalization + row filters)
+            └── workload_dates_filled      (stage 2: null date fill + month_year)
+                └── workload_durations_fixed   (stage 3: duration correction)
+                    └── workload_deduped       (stage 4: deduplication)
+                        └── workload_islands   (stage 5: gap detection + island assignment)
+                            └── workload_combined  (stage 6: session aggregation) ← use this
 ```
 
 ---
@@ -238,3 +240,63 @@ Column transformations:
 | Action | Detail |
 |---|---|
 | Exact duplicate removal | `SELECT DISTINCT *` applied across all columns |
+
+---
+
+### Stage 5 — `workload_islands`
+
+Intermediate table used to detect which sessions belong to the same logical work block before aggregation.
+
+| Column added | Description |
+|---|---|
+| `ts_start` | `date + time_start` cast to TIMESTAMP — the true session start |
+| `ts_end_computed` | `ts_start + duration` in minutes — avoids midnight-crossing issues with the stored `time_end` |
+| `gap_from_prev_minutes` | Minutes between the previous session's `ts_end_computed` and the current `ts_start`, within the same workflow partition |
+| `island_id` | Cumulative sum of new-island flags within each workflow partition — uniquely identifies each combined group |
+
+Partitioned by: `media_title`, `video_type`, `video_subtype`, `creation_category`
+Ordered by: `ts_start`
+
+---
+
+### Stage 6 — `workload_combined`
+
+One row per logical work block (island). Single sessions pass through unchanged (`sessions_combined = 1`).
+
+| Column | Aggregation |
+|---|---|
+| `time_start` | `MIN(time_start)` — earliest start in the group |
+| `time_end` | `MAX(time_start)` — start of the last session in the group |
+| `duration` | `SUM(duration)` — total work time across all sessions in the group |
+| `date`, `month_year`, `media_type`, `media_series` | `MIN(...)` — identical within a group; MIN selects one value |
+| `sessions_combined` | Count of raw sessions merged into this row |
+
+---
+
+## 8. Combined Session Analysis
+
+### 8.1 Concept
+
+A **combined session** is a logical work block formed by merging two or more consecutive raw sessions that share the same workflow (identical `media_title`, `video_type`, `video_subtype`, and `creation_category`) and are separated by a gap of ≤15 minutes. The 15-minute threshold reflects the reality that short breaks within the same task (e.g., a quick pause mid-edit) are part of one continuous work effort rather than distinct sessions.
+
+### 8.2 Distribution of Group Sizes
+
+The frequency distribution of how many raw sessions get grouped into each combined session:
+
+| Sessions in group | % of groups | Interpretation |
+|---|---|---|
+| 1 | ~66% | Solo sessions — not combined with anything |
+| 2 | ~23% | Two consecutive sessions merged |
+| 3–4 | ~9.5% | Longer uninterrupted work blocks |
+| 5–7 | ~1.5% | Extended sessions across many short segments |
+
+Roughly **34% of raw sessions are part of a combined group**, meaning a substantial share of the logged effort represents fragmented work on the same task within a single sitting.
+
+### 8.3 Aggregation Rules
+
+When sessions are merged, the combined row is constructed as follows:
+
+- **Start time:** earliest `time_start` in the group
+- **End time:** `time_start` of the last session in the group (per specification)
+- **Duration:** sum of `duration` across all sessions in the group
+- All workflow-identifying columns (`media_title`, `video_type`, `video_subtype`, `creation_category`) are unchanged — they are identical across all sessions in a group by definition

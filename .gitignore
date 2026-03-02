@@ -1,0 +1,23 @@
+# dbt artifacts
+transform/target/
+transform/dbt_packages/
+transform/logs/
+transform/profiles.yml
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Raw data files (source data, not version controlled)
+data/*.csv
+data/*.xlsx
+data/*.duckdb
+
+# OS
+.DS_Store
+Thumbs.db
