@@ -157,6 +157,7 @@ WHERE
 
 SELECT * FROM workload_clean LIMIT 40;
 
+SELECT COUNT(*), creation_category FROM workload_clean GROUP BY creation_category;
 
 ----checking cleaned data
 SELECT
@@ -584,3 +585,23 @@ LIMIT 10;
 SELECT *
 
 FROM workload;
+
+
+--- Check if the CSV default order ever has a date going forward then back
+--- Uses natural row order (no ORDER BY) to reflect the original CSV sequence
+WITH ordered AS (
+    SELECT
+        date,
+        ROW_NUMBER() OVER () AS rn,
+        LAG(date) OVER (ORDER BY (SELECT NULL)) AS prev_date
+    FROM workload
+    WHERE date IS NOT NULL
+)
+
+SELECT
+    rn,
+    prev_date,
+    date AS curr_date
+FROM ordered
+WHERE date < prev_date
+ORDER BY rn;

@@ -4,7 +4,10 @@
       "Bash(pip show sqlfluff)",
       "Bash(pip3 show sqlfluff)",
       "Bash(python -c \"import sys,json; nb=json.load\\(sys.stdin\\); [print\\(f''[{c[\"\"cell_type\"\"]}] id={c[\"\"id\"\"]}\\\\n{\"\"=\"\"*60}''\\); [print\\(s\\) for s in c[''source'']]; [print\\(o.get\\(''text'',''''\\).strip\\(\\) if o.get\\(''output_type''\\)==''stream'' else str\\(o.get\\(''data'',{}\\).get\\(''text/plain'',''''\\)\\)[:500] if ''data'' in o else ''''\\) for o in c.get\\(''outputs'',[]\\)]; print\\(\\) for _ in [1] ] for c in nb[''cells'']\")",
-      "Bash(python -c \":*)"
+      "Bash(python -c \":*)",
+      "Bash(python -m duckdb \"data/workload.duckdb\" -c \"SELECT DISTINCT creation_category FROM main_dev.stg_workload ORDER BY 1;\")",
+      "Bash(python -m duckdb \"data/workload.duckdb\" -c \"SHOW SCHEMAS;\")",
+      "Bash(.venv/Scripts/python.exe -c \":*)"
     ]
   }
 }

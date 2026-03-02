@@ -13,7 +13,9 @@ __pycache__/
 # Jupyter
 .ipynb_checkpoints/
 
-# DuckDB persistent file (large binary, regenerated from CSV)
+# Raw data files (source data, not version controlled)
+data/*.csv
+data/*.xlsx
 data/*.duckdb
 
 # OS
