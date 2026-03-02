@@ -5,6 +5,7 @@ config-version: 2
 profile: youtube_workload
 
 model-paths: ["models"]
+seed-paths:  ["seed"]
 test-paths:  ["tests"]
 log-path:    "logs"
 

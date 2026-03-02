@@ -1,0 +1,21 @@
+version: 2
+
+seeds:
+  - name: video_labels
+    description: "Manually labeled features for ML modeling. One row per video."
+    columns:
+      - name: video_id
+        description: "MD5 hash key matching dim_videos.video_id"
+        tests:
+          - unique
+          - not_null
+      - name: expected_length_mins
+        description: "Expected final video length in minutes, estimated before production"
+        tests:
+          - not_null
+      - name: expected_complexity
+        description: "Subjective complexity rating estimated before production"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Low', 'Medium', 'High', 'Very High']
