@@ -13,29 +13,46 @@ Use Phase 1 model residuals over time as a baseline drift metric before attribut
 
 ---
 
+
+
 ## Phase 1 Detail - Predict Time (Hours) to Complete a Video
 
 ### Target
-Total hours of Pre-Processing + Processing. Post-Processing excluded (mechanical, predictable on its own).
+Total hours of Pre-Processing + Processing. Post-Processing excluded (mechanical, predictable on its own, and irrelevant.  Often times im making a thumbnail years later).
+
 Secondary target to consider: total unique days worked on the video.
 
 ### Features - Must Be Known Before Starting the Video
 `media_type` - Definitely will have an impact but does it even make sense to make a model including both?  or 2 separate models?
 `media_series` - I think this probably useful ONLY in that maybe having an ordinal variable (like first, second, third in series) could be useful. Consider capping position (e.g. min(position, 5)) — position 1 vs 2 matters, position 12 vs 13 probably doesn't.
+
+UPDATE:  `media_series` is too sparse.  I will handle this with it being a component of "complexity" (basically if its the first in a series that I'm doing, it adds to the complexity)
+
 `media_title` - I dont think this will be useful
 `video_type` - i think this is useful with `media_type` and `video_subtype`
 `expected video duration` - likely one of the strongest predictors. A 30-min video almost certainly takes longer to produce than a 10-min one, and target length is known before starting.
-`complexity` - High / Medium / Low. Needs a rules-based definition decided *before* labeling historical data — avoid letting outcome (how long it took) influence the label.
+**Complexity Flags** (binary 0/1 unless noted; all assigned prospectively before work begins)
 
-I need to figure out what features make sense. Obviously, i can build a regression model based on time duration of various editing processes BUT that won't lend itself to being a predictive model.  We need to have features that we know ahead of time.
+`complexity_new` — 1 if: new video series, first time doing something on-camera or technically, or first time watching the source material. Captures startup/unfamiliarity overhead.
 
-I wonder if building a model that predicts # of hours or day span is really that useful?  because i can't use a lot of things because those things are only KNOWN after i build the video and have all the data (things like "time spent editing")
+`complexity_media_depth` — Binary. 1 = wide range of topics covered (e.g. a full movie review covering themes, characters, plot); 0 = narrow/focused scope (e.g. a single boss review, a scene breakdown covering one scene).
+
+`complexity_delivery_style` — 1 = fully scripted, not adlibbing recordings; 0 = notes-based with adlibbed delivery. Scripted (1) is the target standard for reviews going forward.
+
+`complexity_logistics` — 1 if external circumstantial disruptions were present during production: vacation, travel, or major life events (new job, job loss, significant personal change). Caution: some events are not predictable at video start, making this partially retrospective. Expected to be a stronger predictor of `total_day_span` than `hours_creation`.
+
+`complexity_worklife` — 0 = free to work on videos without constraints; 1 = forced to work in limited intervals due to work-life balance pressures. Primary predictor for `total_day_span` rather than `hours_creation`.
+
+
+
+
+
 
 ### Known Risks and Constraints
 
-**Sample size** - ~108 usable videos after cleaning. Biggest practical constraint. Before modeling, validate row counts per `media_type x video_type x video_subtype` segment. Any cell under ~20 rows is a red flag. This is the most likely reason the project becomes impractical.
+**Sample size** - ~100 usable videos after cleaning in March 2026. Biggest practical constraint. 
 
-**Learning/temporal drift** - Production speed has likely improved over time through experience, independent of content type. A model trained equally on all historical data will underestimate current pace. Options: add a time-based feature, apply recency weighting, or restrict training to recent data.
+**Learning/temporal drift** - Production speed has likely improved over time through experience, independent of content type. But this is confounded by my data where all video games are 2023-2024 and then everything after that is movies (except 1 video game).  Im expecting to do more video game content but its confounding.
 
 **Single model vs. separate models** - Start with one model and `media_type` as a feature. Check residuals by `media_type`. If errors are systematically biased by type, split into separate models then.
 

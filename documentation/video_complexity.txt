@@ -1,0 +1,13 @@
+Video Complexity is Either:
+
+Low -1
+Medium -2 
+High - 3
+Very High -4
+
+There are 4 categories, basically if its 1,2,3,4 of those categories, it maps to the above.
+
+1) First in a series/new feature or technology I haven't used
+2) Complicated movie/quest/video game/idea
+3) Expected to be highly edited
+4) Expected to be a longer video

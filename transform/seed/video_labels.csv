@@ -1,102 +1,102 @@
-video_id,media_title,video_type,video_subtype,expected_length_mins,expected_complexity
-3f1e15377df0aa1889f360c247df7a90,Elden Ring,Playthrough,Part 5,30,High
-8b355e78a5e31e75061372e25b22d6c7,Elden Ring,Review,Demi Human Chief,10,Medium
-da6e01691e06c291bc49a6dc16d9315e,Elden Ring,Review,Erdtree Burial Watchdog,10,Low
-e63306ce56de41f88ed7de3e3623aad9,Elden Ring,Playthrough,Part 6,30,High
-1050d995453283fca97699b97994f646,Elden Ring,Review,Mad Pumpkin Head,10,Low
-1eb5de245a616b4e20f1341992fe19d5,Elden Ring,Review,Black Knife Assassin,10,Low
-f8b7f0581808c6dd5b6211f0f0ffbdfc,Elden Ring,Review,Beastman of Farum Azula,10,Medium
-903ccba314c9636d473f744698dbb3ae,The Witcher 3,Review,Twisted Firestarter,10,High
-5022a29d75d876560f8023842f9698f8,Elden Ring,Review,Tree Sentinel,10,Medium
-d4f750caf8dd5821f21f02e6965f1253,The Witcher 3,Review,Kaer Morhen,10,High
-6294505edc030e70f89e2d168cd76705,Elden Ring,Review,Ulcerated Tree Spirit,10,Medium
-cb7a9521a2123e165eb8dc16a9feb2ee,Elden Ring,Review,Margit the Fell Omen,10,Medium
-9fe85bad1dc99da42df2690ff6e48e7d,The Witcher 3,Review,Precious Cargo,10,Medium
-6b9cc9515fd7a8f6b81180575ac9d6e2,The Witcher 3,Review,Devil By the Well,10,Medium
-e58c4463ef28376c9315f13de1f6bbd2,The Witcher 3,Review,Lilac and Gooseberries,15,High
-f35c630dbec705e6a733f6b9ce1a32eb,The Witcher 3,Review,Imperial Audience,10,Medium
-249b20e11c1acd6723b0db1a7a97eda6,The Witcher 3,Review,Funeral Pyres,10,Low
-c23a94b8d97da1bf40edeedf678dd28f,The Witcher 3,Review,The Nilgaardian Connection,10,Medium
-add36715155c3f332cfb5a5d922752de,The Witcher 3,Review,Woodland Beast,10,Medium
-d579aacf24726a9aa9106998e1ea9d61,The Witcher 3,Review,Bloody Baron,15,High
-fd016d503ab082286bfdce674b1f177a,The Witcher 3,Review,Wild at Heart,10,Medium
-6817bd0a03972dcdc1c400f9c025c788,The Witcher 3,Review,Family Matters,15,High
-5c192f55142cf526d47a8405c2a276d4,The Witcher 3,Review,Fool's Gold,10,Low
-8c05a60092adf56e17677a3572a23512,The Witcher 3,Review,Hunting a Witch,10,Medium
-7f149f5815f24e3d8aa1330266141866,The Witcher 3,Review,Shrieker and Jenny of the Woods,10,Medium
-2335366d572ca5fecfda49f8b76da6c2,The Witcher 3,Review,Wandering in the Dark,10,Medium
-f3ba4f828ce76d68d430dcb3ff33d4be,The Witcher 3,Review,Ghosts of the Past,10,High
-f1ec61729180af29b9d44bfbba63c242,The Witcher 3,Review,Missing in Action,10,Low
-43f0249e81081c475c1f83a8eece3a5f,Baldur's Gate 3,Playthrough,Character Creation,10,High
-1e07a59bf002f95fae2f15cddc08b329,The Witcher 3,Review,Ladies of the Wood,15,High
-9b6f299faabe65e8947d7cc66704b606,Baldur's Gate 3,Playthrough,Nautiloid Ship,20,Very High
-872b9e6f292f5b854068456e981748bc,The Witcher 3,Review,Witcher Wannabe,10,Medium
-f1496537ecbbbb6c91bd097a196c97c8,The Witcher 3,Review,Return to Crookback Bog,15,High
-49ab62cabc7fb7a6f5d0a65a36da920d,The Witcher 3,Review,The Merry Widow,10,Medium
-e255f9fdbf85c392d75b5679254af0d4,The Witcher 3,Review,Towerful of Mice,15,High
-44a9600fc7dde3408c57de9e319c168a,Grand Theft Auto V,Review,Prologue,10,Medium
-7951490627e9143472975b4acd4d7b7c,The Witcher 3,Review,A Greedy God,10,Medium
-ffa59706536767c45bd0db87f03d2382,Grand Theft Auto V,Review,Franklins Intro,15,Very High
-c5c44c9096e59ecdc3e30b722117fb23,The Witcher 3,Review,Swamp Thing,10,Medium
-6a41f6074c68ccb5da968cad8bc1308e,The Witcher 3,Review,Pyres of Novigrad,15,High
-60593ee319be39f4097009ebc8a2f59a,Grand Theft Auto V,Review,Michael and Franklin Working Together,20,High
-ab6908bd26293724b893869c38a8add2,The Witcher 3,Review,High Stakes,10,Medium
-0164fc071a186d794496433e94891235,Grand Theft Auto V,Review,First Heist,20,High
-afb793042987deec23acf140ff6f3016,The Witcher 3,Review,Novigrad Dreaming,10,Medium
-46a0b74355c88b972da6ef78e613a2d2,Elden Ring,Playthrough,Deaths 01,10,Very High
-5de9b92b53bf6fde502171ee52a7f5a5,The Witcher 3,Review,Forefather's Eve,10,Medium
-662f0ba775ca25748494b6ebbe150f4b,The Witcher 3,Review,The Volunteer,10,Medium
-4440c5eed102431dcf19902d268aebd4,The Witcher 3,Review,Broken Flowers,15,High
-52ce9bf9c810893f472caacb43c161f3,The Witcher 3,Rankings,White Orchard Main Quests,7,Low
-432912108be17af48571a795b236b301,The Witcher 3,Review,An Elusive Thief,10,Medium
-a8e96a0d082c32b01eb94af8871665cc,Elden Ring,Playthrough,Deaths 02,15,High
-4c3a3e7cb333d02e7768e76112fa95d0,The Witcher 3,Rankings,White Orchard Side Quests,7,Low
-46a9edf1604daa0bfa5effe019ebcfa1,The Witcher 3,Review,Patrol Gone Missing,10,Medium
-d3068d84ee3671f052809e7b88f3d3e5,The Witcher 3,Review,Count Reuven's Treasure,15,High
-b2276d0ba69c0074766444b83257438d,The Witcher 3,Review,Get Junior,15,High
-31702c8db2b3a5c73926f1f877782e38,Halloween,Review,3 Things,20,Very High
-a32af1717a2a6a33237df53f12691fa7,Halloween 2,Review,3 Things,20,High
-e9d4b63f82ad3691c38a7b503d954e64,Halloween 4: The Return of Michael Myers,Review,3 Things,20,High
-f628852c646d8e4efc9323100fc73999,Halloween 5: The Revenge of Michael Myers,Review,3 Things,20,High
-23e3a387256303db7d6665e878b9cda5,Halloween 6: The Curse of Michael Myers,Review,3 Things,15,High
-eaf78f49a5fd63d91a03a3186cb329ea,Raiders of the Lost Ark,Review,3 Things,15,Very High
-bd674ffccce566206028004a9edc50e5,Halloween,Rankings,Scene Rankings,25,Very High
-78da5b087080f0172cc451093d53ca8b,Raiders of the Lost Ark,Rankings,Scene Rankings,25,High
-3491abd8444e3685eb586d6fb6789c11,Halloween 2,Rankings,Scene Rankings,25,High
-8dd241d1d72a2d7442eea3c33c1a7b3b,Indiana Jones and the Temple of Doom,Rankings,Scene Rankings,25,High
-a9aed3704630376c73489a007ca89870,Indiana Jones and the Temple of Doom,Review,3 Things,15,High
-c188038077501d45bea0e911d309e67f,Indiana Jones and the Last Crusade,Review,3 Things,15,High
-e97c009c1c994e933e98f60987aa42fe,Indiana Jones and the Last Crusade,Rankings,Scene Rankings,20,High
-e28a69acb7b270da68bb8a2b88ee1047,Indiana Jones and the Kingdom of the Crystal Skull,Review,3 Things,15,High
-e40e27f86ef392bb17304e204c579395,Indiana Jones and the Dial of Destiny,Review,3 Things,15,High
-61f08c067e248bf091c993ded3a4f7b8,Jaws,Review,3 Things,15,Very High
-795b1f194ba7b836b1688de650eebc2c,Indiana Jones and the Kingdom of the Crystal Skull,Rankings,Scene Rankings,20,Medium
-ff5984af564c21b7e9709bf65070cc67,Jaws 2,Review,3 Things,15,High
-27a52dafa3cdeaf65829ec373ceea3af,Jaws 3-D,Review,3 Things,15,High
-8b5ee1adfbaf95a692a4548a9bd286ba,Jaws The Revenge,Review,3 Things,15,High
-ee270bd9ce82e930a52e19a9c9460d2e,Jurassic Park,Rankings,Scene Rankings,20,High
-3d3d822bd801c5df5c87fb52f96018ad,Jurassic Park,Review,3 Things,15,Very High
-d016832e3831db46bf6d042d1bddffdd,Jaws Movies,Rankings,Movie Series By Category,10,Medium
-36668174a2e20bdc08005de6d9757511,The Lost World: Jurassic Park,Rankings,Scene Rankings,20,High
-56b5e3997a2663369a0ab7a3c7a8236d,The Lost World: Jurassic Park,Review,3 Things,15,High
-909306f36c32d9e3696de0d3b48b1414,Jurassic Park 3,Review,3 Things,15,High
-18fd2e58aa7f302270d75e86449d553d,Jurassic World,Review,3 Things,15,High
-110c7fc33d5981d682f9ffcf1751b478,Jurassic World: Fallen Kingdom,Review,3 Things,15,High
-73896d7e85c119425d9124785d2aba63,Jurassic Park Movies,Rankings,Movie Series By Category,15,Medium
-b3df84124479e13c23558f9ebd6b6f33,Jurassic World: Dominion,Review,3 Things,15,High
-ea50adb5159b4bf0e391b3669484bf3a,Jurassic World: Rebirth,Review,Quick Review,10,Low
-bb8b8bfc3d951fdb9c8d1b2c4a1d1153,Superman Movies,Retrospectives,Unscripted Memories,15,Medium
-22a8a9d68d2a7bf81782e8c9960a1a60,Superman: The Movie,Review,3 Things,15,High
-9f5b5a241c35dbc680e65e5f4f9be9d0,Superman 2,Review,3 Things,15,High
-7260a859cd46fd36fed46e6aa6f25e64,Superman: The Movie,Rankings,Scene Rankings,15,Medium
-c93b7760f394eeb008ac8d8ddacc5db2,Hitman WOA,Playthrough,Paris Master,10,Medium
-b0c3fb0a294f8490ab6d6eb08b092112,Superman 3,Review,3 Things,15,High
-26f25170648d9319b3b9c22cbcece54d,Superman 4:  The Quest for Peace,Review,3 Things,15,High
-02d07a00ad714b2ab7c3720179f13b67,Raiders of the Lost Ark,Scene Breakdown,Prologue,7,Medium
-60f2062bee5bae6e49dd6396a70af31b,Indiana Jones and the Temple of Doom,Scene Breakdown,Prologue,7,Low
-80ded5d4a5f494e3c91d748b17129ca2,Indiana Jones and the Last Crusade,Scene Breakdown,Prologue,7,Low
-b27e8bdb10067f3406e4abb223dff231,Indiana Jones and the Kingdom of the Crystal Skull,Scene Breakdown,Prologue,7,Low
-b991ec12f84bcc0948d6bafd68c1ac4a,A Nightmare on Elm Street,Review,3 Things,15,Very High
-5ebb365dd4f32e3ae18dfa4ffa8bf4aa,A Nightmare on Elm Street 2:  Freddy's Revenge,Review,3 Things,15,High
-c950f5525c17583b449f3091313b60eb,A Nightmare on Elm Street,Scene Breakdown,Freddy's Introduction,7,Low
-f9fcf4f1daf688f7d898c85efa698bfd,Hitman WOA,Playthrough,Paris Bond,15,Medium
+video_id,media_title,video_type,video_subtype,expected_length_mins,complexity_new,complexity_media_depth,complexity_delivery_style,complexity_logistics,complexity_worklife
+3f1e15377df0aa1889f360c247df7a90,Elden Ring,Playthrough,Part 5,30,0,0,1,0,0
+8b355e78a5e31e75061372e25b22d6c7,Elden Ring,Review,Demi Human Chief,10,1,0,1,0,0
+da6e01691e06c291bc49a6dc16d9315e,Elden Ring,Review,Erdtree Burial Watchdog,10,0,0,1,0,0
+e63306ce56de41f88ed7de3e3623aad9,Elden Ring,Playthrough,Part 6,30,0,0,1,0,0
+1050d995453283fca97699b97994f646,Elden Ring,Review,Mad Pumpkin Head,10,0,0,1,0,0
+1eb5de245a616b4e20f1341992fe19d5,Elden Ring,Review,Black Knife Assassin,10,0,0,1,0,0
+f8b7f0581808c6dd5b6211f0f0ffbdfc,Elden Ring,Review,Beastman of Farum Azula,10,1,0,1,0,0
+903ccba314c9636d473f744698dbb3ae,The Witcher 3,Review,Twisted Firestarter,10,1,1,1,0,0
+5022a29d75d876560f8023842f9698f8,Elden Ring,Review,Tree Sentinel,10,1,0,1,0,0
+d4f750caf8dd5821f21f02e6965f1253,The Witcher 3,Review,Kaer Morhen,10,1,1,1,0,0
+6294505edc030e70f89e2d168cd76705,Elden Ring,Review,Ulcerated Tree Spirit,10,0,0,1,0,0
+cb7a9521a2123e165eb8dc16a9feb2ee,Elden Ring,Review,Margit the Fell Omen,10,0,0,1,0,0
+9fe85bad1dc99da42df2690ff6e48e7d,The Witcher 3,Review,Precious Cargo,10,1,1,1,1,0
+6b9cc9515fd7a8f6b81180575ac9d6e2,The Witcher 3,Review,Devil By the Well,10,1,1,1,0,0
+e58c4463ef28376c9315f13de1f6bbd2,The Witcher 3,Review,Lilac and Gooseberries,15,0,1,1,0,0
+f35c630dbec705e6a733f6b9ce1a32eb,The Witcher 3,Review,Imperial Audience,10,0,1,1,0,0
+249b20e11c1acd6723b0db1a7a97eda6,The Witcher 3,Review,Funeral Pyres,10,0,1,1,0,0
+c23a94b8d97da1bf40edeedf678dd28f,The Witcher 3,Review,The Nilgaardian Connection,10,0,1,1,0,0
+add36715155c3f332cfb5a5d922752de,The Witcher 3,Review,Woodland Beast,10,0,1,1,0,0
+d579aacf24726a9aa9106998e1ea9d61,The Witcher 3,Review,Bloody Baron,15,0,1,1,0,0
+fd016d503ab082286bfdce674b1f177a,The Witcher 3,Review,Wild at Heart,10,0,1,1,0,0
+6817bd0a03972dcdc1c400f9c025c788,The Witcher 3,Review,Family Matters,15,0,1,1,0,0
+5c192f55142cf526d47a8405c2a276d4,The Witcher 3,Review,Fool's Gold,10,0,1,1,0,0
+8c05a60092adf56e17677a3572a23512,The Witcher 3,Review,Hunting a Witch,10,0,1,1,0,0
+7f149f5815f24e3d8aa1330266141866,The Witcher 3,Review,Shrieker and Jenny of the Woods,10,1,1,1,0,0
+2335366d572ca5fecfda49f8b76da6c2,The Witcher 3,Review,Wandering in the Dark,10,0,1,1,0,0
+f3ba4f828ce76d68d430dcb3ff33d4be,The Witcher 3,Review,Ghosts of the Past,10,0,1,1,0,0
+f1ec61729180af29b9d44bfbba63c242,The Witcher 3,Review,Missing in Action,10,0,1,1,0,0
+43f0249e81081c475c1f83a8eece3a5f,Baldur's Gate 3,Playthrough,Character Creation,10,1,1,1,0,0
+1e07a59bf002f95fae2f15cddc08b329,The Witcher 3,Review,Ladies of the Wood,15,0,1,1,0,0
+9b6f299faabe65e8947d7cc66704b606,Baldur's Gate 3,Playthrough,Nautiloid Ship,20,1,1,1,1,0
+872b9e6f292f5b854068456e981748bc,The Witcher 3,Review,Witcher Wannabe,10,0,1,1,0,0
+f1496537ecbbbb6c91bd097a196c97c8,The Witcher 3,Review,Return to Crookback Bog,15,0,1,1,0,0
+49ab62cabc7fb7a6f5d0a65a36da920d,The Witcher 3,Review,The Merry Widow,10,0,1,1,0,0
+e255f9fdbf85c392d75b5679254af0d4,The Witcher 3,Review,Towerful of Mice,15,0,1,1,0,0
+44a9600fc7dde3408c57de9e319c168a,Grand Theft Auto V,Review,Prologue,10,1,1,1,0,0
+7951490627e9143472975b4acd4d7b7c,The Witcher 3,Review,A Greedy God,10,0,1,1,0,0
+ffa59706536767c45bd0db87f03d2382,Grand Theft Auto V,Review,Franklins Intro,15,1,1,1,0,0
+c5c44c9096e59ecdc3e30b722117fb23,The Witcher 3,Review,Swamp Thing,10,0,1,1,0,0
+6a41f6074c68ccb5da968cad8bc1308e,The Witcher 3,Review,Pyres of Novigrad,15,0,1,1,0,0
+60593ee319be39f4097009ebc8a2f59a,Grand Theft Auto V,Review,Michael and Franklin Working Together,20,0,1,1,0,0
+ab6908bd26293724b893869c38a8add2,The Witcher 3,Review,High Stakes,10,0,1,1,0,0
+0164fc071a186d794496433e94891235,Grand Theft Auto V,Review,First Heist,20,0,1,1,0,0
+afb793042987deec23acf140ff6f3016,The Witcher 3,Review,Novigrad Dreaming,10,0,1,1,0,0
+46a0b74355c88b972da6ef78e613a2d2,Elden Ring,Playthrough,Deaths 01,10,1,1,1,0,0
+5de9b92b53bf6fde502171ee52a7f5a5,The Witcher 3,Review,Forefather's Eve,10,0,1,1,0,0
+662f0ba775ca25748494b6ebbe150f4b,The Witcher 3,Review,The Volunteer,10,0,1,1,0,0
+4440c5eed102431dcf19902d268aebd4,The Witcher 3,Review,Broken Flowers,15,0,1,1,0,0
+52ce9bf9c810893f472caacb43c161f3,The Witcher 3,Rankings,White Orchard Main Quests,7,1,1,1,0,0
+432912108be17af48571a795b236b301,The Witcher 3,Review,An Elusive Thief,10,0,1,1,0,0
+a8e96a0d082c32b01eb94af8871665cc,Elden Ring,Playthrough,Deaths 02,15,0,1,1,0,0
+4c3a3e7cb333d02e7768e76112fa95d0,The Witcher 3,Rankings,White Orchard Side Quests,7,0,1,1,0,0
+46a9edf1604daa0bfa5effe019ebcfa1,The Witcher 3,Review,Patrol Gone Missing,10,0,1,1,0,0
+d3068d84ee3671f052809e7b88f3d3e5,The Witcher 3,Review,Count Reuven's Treasure,15,0,1,1,0,0
+b2276d0ba69c0074766444b83257438d,The Witcher 3,Review,Get Junior,15,0,1,1,0,0
+31702c8db2b3a5c73926f1f877782e38,Halloween,Review,3 Things,20,1,1,1,1,0
+a32af1717a2a6a33237df53f12691fa7,Halloween 2,Review,3 Things,20,0,1,1,1,0
+e9d4b63f82ad3691c38a7b503d954e64,Halloween 4: The Return of Michael Myers,Review,3 Things,20,0,1,1,0,0
+f628852c646d8e4efc9323100fc73999,Halloween 5: The Revenge of Michael Myers,Review,3 Things,20,0,1,1,0,0
+23e3a387256303db7d6665e878b9cda5,Halloween 6: The Curse of Michael Myers,Review,3 Things,15,0,1,1,0,0
+eaf78f49a5fd63d91a03a3186cb329ea,Raiders of the Lost Ark,Review,3 Things,15,1,1,1,0,0
+bd674ffccce566206028004a9edc50e5,Halloween,Rankings,Scene Rankings,25,1,1,0,0,0
+78da5b087080f0172cc451093d53ca8b,Raiders of the Lost Ark,Rankings,Scene Rankings,25,0,1,0,0,0
+3491abd8444e3685eb586d6fb6789c11,Halloween 2,Rankings,Scene Rankings,25,0,1,0,0,0
+8dd241d1d72a2d7442eea3c33c1a7b3b,Indiana Jones and the Temple of Doom,Rankings,Scene Rankings,25,0,1,0,0,0
+a9aed3704630376c73489a007ca89870,Indiana Jones and the Temple of Doom,Review,3 Things,15,0,1,1,0,0
+c188038077501d45bea0e911d309e67f,Indiana Jones and the Last Crusade,Review,3 Things,15,0,1,1,0,0
+e97c009c1c994e933e98f60987aa42fe,Indiana Jones and the Last Crusade,Rankings,Scene Rankings,20,0,1,0,1,0
+e28a69acb7b270da68bb8a2b88ee1047,Indiana Jones and the Kingdom of the Crystal Skull,Review,3 Things,15,0,1,1,0,0
+e40e27f86ef392bb17304e204c579395,Indiana Jones and the Dial of Destiny,Review,3 Things,15,1,1,1,0,0
+61f08c067e248bf091c993ded3a4f7b8,Jaws,Review,3 Things,15,1,1,1,0,0
+795b1f194ba7b836b1688de650eebc2c,Indiana Jones and the Kingdom of the Crystal Skull,Rankings,Scene Rankings,20,0,1,0,0,0
+ff5984af564c21b7e9709bf65070cc67,Jaws 2,Review,3 Things,15,0,1,1,1,0
+27a52dafa3cdeaf65829ec373ceea3af,Jaws 3-D,Review,3 Things,15,0,1,1,0,0
+8b5ee1adfbaf95a692a4548a9bd286ba,Jaws The Revenge,Review,3 Things,15,0,1,1,1,0
+ee270bd9ce82e930a52e19a9c9460d2e,Jurassic Park,Rankings,Scene Rankings,20,1,1,0,0,0
+3d3d822bd801c5df5c87fb52f96018ad,Jurassic Park,Review,3 Things,15,1,1,1,0,0
+d016832e3831db46bf6d042d1bddffdd,Jaws Movies,Rankings,Movie Series By Category,10,1,1,0,0,0
+36668174a2e20bdc08005de6d9757511,The Lost World: Jurassic Park,Rankings,Scene Rankings,20,0,1,0,0,0
+56b5e3997a2663369a0ab7a3c7a8236d,The Lost World: Jurassic Park,Review,3 Things,15,1,1,1,0,1
+909306f36c32d9e3696de0d3b48b1414,Jurassic Park 3,Review,3 Things,15,0,1,1,0,1
+18fd2e58aa7f302270d75e86449d553d,Jurassic World,Review,3 Things,15,0,1,1,0,1
+110c7fc33d5981d682f9ffcf1751b478,Jurassic World: Fallen Kingdom,Review,3 Things,15,1,1,1,0,1
+73896d7e85c119425d9124785d2aba63,Jurassic Park Movies,Rankings,Movie Series By Category,15,0,1,1,0,1
+b3df84124479e13c23558f9ebd6b6f33,Jurassic World: Dominion,Review,3 Things,15,1,1,1,0,1
+ea50adb5159b4bf0e391b3669484bf3a,Jurassic World: Rebirth,Review,Retrospectives,10,1,0,0,0,1
+bb8b8bfc3d951fdb9c8d1b2c4a1d1153,Superman Movies,Retrospectives,Retrospectives,15,1,1,0,1,1
+22a8a9d68d2a7bf81782e8c9960a1a60,Superman: The Movie,Review,3 Things,15,1,1,1,0,1
+9f5b5a241c35dbc680e65e5f4f9be9d0,Superman 2,Review,3 Things,15,0,1,1,0,1
+7260a859cd46fd36fed46e6aa6f25e64,Superman: The Movie,Rankings,Scene Rankings,15,0,1,0,0,1
+c93b7760f394eeb008ac8d8ddacc5db2,Hitman WOA,Playthrough,Paris Master,10,1,0,1,0,1
+b0c3fb0a294f8490ab6d6eb08b092112,Superman 3,Review,3 Things,15,0,1,1,0,1
+26f25170648d9319b3b9c22cbcece54d,Superman 4:  The Quest for Peace,Review,3 Things,15,0,1,1,0,1
+02d07a00ad714b2ab7c3720179f13b67,Raiders of the Lost Ark,Scene Breakdown,Prologue,7,1,0,0,0,1
+60f2062bee5bae6e49dd6396a70af31b,Indiana Jones and the Temple of Doom,Scene Breakdown,Prologue,7,0,0,0,0,1
+80ded5d4a5f494e3c91d748b17129ca2,Indiana Jones and the Last Crusade,Scene Breakdown,Prologue,7,0,0,0,0,1
+b27e8bdb10067f3406e4abb223dff231,Indiana Jones and the Kingdom of the Crystal Skull,Scene Breakdown,Prologue,7,0,0,0,0,1
+b991ec12f84bcc0948d6bafd68c1ac4a,A Nightmare on Elm Street,Review,3 Things,15,1,1,0,0,1
+5ebb365dd4f32e3ae18dfa4ffa8bf4aa,A Nightmare on Elm Street 2:  Freddy's Revenge,Review,3 Things,15,0,1,0,1,0
+c950f5525c17583b449f3091313b60eb,A Nightmare on Elm Street,Scene Breakdown,Freddy's Introduction,7,0,0,0,1,0
+f9fcf4f1daf688f7d898c85efa698bfd,Hitman WOA,Playthrough,Paris Bond,15,1,0,1,1,0
