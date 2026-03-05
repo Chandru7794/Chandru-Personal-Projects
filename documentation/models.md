@@ -20,28 +20,74 @@ Use Phase 1 model residuals over time as a baseline drift metric before attribut
 ### Target
 Total hours of Pre-Processing + Processing. Post-Processing excluded (mechanical, predictable on its own, and irrelevant.  Often times im making a thumbnail years later).
 
-Secondary target to consider: total unique days worked on the video.
+Stored as `hours_creation` in `dim_videos` / `dim_videos_ml` (computed in dbt, not derived in notebooks).
+
+#### Target Distribution and Outlier Handling
+
+One significant outlier exists: the Halloween Review (3 Things), `hours_creation = 53.15`, the first movie review ever made (June 2024). Most complexity flag was active simultaneously (`complexity_new=1`, `complexity_media_depth=1`, `complexity_delivery_style=1`, `complexity_logistics=1`). It is ~40% above the next-highest video (Jaws, 37.85 hrs) and ~3x the dataset mean.
+
+**Plan: Fit both raw and log-transformed models; let residual diagnostics and out-of-sample RMSE decide.**
+
+The normality assumption in linear regression applies to the **model residuals**, not the raw target. A Q-Q plot of the raw target is a useful preliminary indicator but is not the definitive test. The Q-Q R² on the raw target is 0.924, which is in the acceptable range — the data is not wildly non-normal. The Shapiro-Wilk test rejects normality, but at n=98 it has enough power to flag mild departures that are practically irrelevant.
+
+Both versions will be fit with Ridge regularization, and the winner is determined by:
+1. Residual Q-Q plots — whichever produces better-behaved (more normal) residuals
+2. Walk-forward RMSE in the original hours scale (log model predictions are back-transformed via `exp()` before comparison)
+
+**Option 1 — Log-transform**
+- Compresses the right tail proportionally. Halloween shifts from 53.15 to log=3.97; Jaws from 37.85 to 3.63. Reduces Halloween's leverage on coefficients without discarding it.
+- Keeps all 99 data points.
+- Coefficients become multiplicative: a flag adding β log-hours means the video takes e^β times as long.
+- Trade-off: back-transformation introduces a small bias. `exp(predicted_log)` estimates the geometric mean, not the arithmetic mean. A smearing correction (`exp(predicted_log + residual_variance/2)`) is needed for unbiased hour predictions. Predictions less intuitive to reason about.
+
+**Option 2 — Raw (no transform)**
+- Predictions directly in hours — easier to interpret and communicate.
+- Ridge regularization partially mitigates Halloween's leverage by shrinking all coefficients.
+- Valid if residuals are approximately normal after fitting.
+
+**Option 3 — Cap (Winsorize)** — Rejected
+- Clips values above a percentile threshold, effectively relabelling Halloween with a fabricated label. The cap value is arbitrary and percentile estimates are unstable at n=98.
+
+**Option 4 — Removal** — Rejected
+- Drops Halloween from training (n=98 to 97). Halloween is the only row where all complexity flags fire at once; removing it further thins signal for already-sparse flags. Future first-time videos still need a grounding point.
+
+#### Secondary Target
+`creation_day_span` — calendar days from first to last creation session (pre-processing + processing only).
+
+Use this instead of `total_day_span`. `total_day_span` spans the first work session to the last session of any type, including thumbnails and subtitles that can be done years after the main work is finished. `creation_day_span` is stored in `dim_videos` / `dim_videos_ml` (computed in dbt).
+
+Secondary target to consider: total unique days worked on the video (`active_days_worked`).
 
 ### Features - Must Be Known Before Starting the Video
-`media_type` - Definitely will have an impact but does it even make sense to make a model including both?  or 2 separate models?
-`media_series` - I think this probably useful ONLY in that maybe having an ordinal variable (like first, second, third in series) could be useful. Consider capping position (e.g. min(position, 5)) — position 1 vs 2 matters, position 12 vs 13 probably doesn't.
 
-UPDATE:  `media_series` is too sparse.  I will handle this with it being a component of "complexity" (basically if its the first in a series that I'm doing, it adds to the complexity)
+`expected_length_mins` — likely one of the strongest predictors. Values (7,10,15,20,25,30) are tier labels, not continuous measurements. Encoded as 3 ordinal tiers for modeling:
+- Short: 7, 10 min (n ≈ 46)
+- Average: 15 min (n ≈ 36)
+- Long: 20, 25, 30 min (n ≈ 17)
 
-`media_title` - I dont think this will be useful
-`video_type` - i think this is useful with `media_type` and `video_subtype`
-`expected video duration` - likely one of the strongest predictors. A 30-min video almost certainly takes longer to produce than a 10-min one, and target length is known before starting.
-**Complexity Flags** (binary 0/1 unless noted; all assigned prospectively before work begins)
+**Complexity Flags** (binary 0/1; all assigned prospectively before work begins)
 
 `complexity_new` — 1 if: new video series, first time doing something on-camera or technically, or first time watching the source material. Captures startup/unfamiliarity overhead.
 
-`complexity_media_depth` — Binary. 1 = wide range of topics covered (e.g. a full movie review covering themes, characters, plot); 0 = narrow/focused scope (e.g. a single boss review, a scene breakdown covering one scene).
+`complexity_media_depth` — 1 = wide range of topics covered (e.g. a full movie review covering themes, characters, plot); 0 = narrow/focused scope (e.g. a single boss review, a scene breakdown covering one scene).
 
 `complexity_delivery_style` — 1 = fully scripted, not adlibbing recordings; 0 = notes-based with adlibbed delivery. Scripted (1) is the target standard for reviews going forward.
 
-`complexity_logistics` — 1 if external circumstantial disruptions were present during production: vacation, travel, or major life events (new job, job loss, significant personal change). Caution: some events are not predictable at video start, making this partially retrospective. Expected to be a stronger predictor of `total_day_span` than `hours_creation`.
+`complexity_logistics` — excluded from primary model. 1 if external circumstantial disruptions were present during production. Partially retrospective (not always predictable at video start). Retained in seed/dbt for Phase 2 lever analysis.
 
-`complexity_worklife` — 0 = free to work on videos without constraints; 1 = forced to work in limited intervals due to work-life balance pressures. Primary predictor for `total_day_span` rather than `hours_creation`.
+`complexity_worklife` — excluded from primary model. 1 = forced to work in limited intervals due to work-life balance pressures. Temporally confounded (skews toward recent videos) and more predictive of `creation_day_span` than `hours_creation`. Retained in seed/dbt for Phase 2.
+
+**`video_type` vs Complexity Flags — Modeling Approach**
+
+`video_type` and the complexity flags are correlated (Spearman r=+0.376 between `complexity_delivery_style` and `[vtype] Review`; r=-0.430 vs `[vtype] Rankings`), but not redundant — the flags explain ~14% of video_type variance (r²≈0.14), meaning both carry substantial independent signal. Note: these correlations dropped significantly after correcting `complexity_media_depth` and `complexity_delivery_style` flags for early Witcher 3 videos (previously reported at r=0.71 based on mislabeled data). However, including both at n=98 would exceed the practical parameter budget.
+
+Two model variants will be compared on walk-forward RMSE:
+- **Model A — Flags only:** `expected_length_mins` + `complexity_new` + `complexity_media_depth` + `complexity_delivery_style`. Forward-compatible as production style evolves; encodes causal mechanism rather than label. Note: `complexity_new` has weak bivariate correlation with hours_creation (Spearman r=+0.074, p=0.47) — Ridge will naturally shrink its coefficient; confirm contribution at model-fitting time.
+- **Model B — video_type only:** `expected_length_mins` + `video_type` dummies (drop one reference level). More directly interpretable but less generalizable to new formats.
+
+`media_type` excluded from both — temporally aliased with content era (Video Games 2023–2024, Movies 2024+), making the coefficient unreliable in walk-forward evaluation.
+
+`media_series`, `media_title` — not used. Too sparse or no signal.
 
 
 

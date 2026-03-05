@@ -2,7 +2,7 @@ version: 2
 
 seeds:
   - name: video_labels
-    description: "Manually labeled features for ML modeling. One row per video."
+    description: "Manually labeled features for ML modeling. One row per video. Incomplete/in-progress videos are included with is_complete=0 and null labels."
     columns:
       - name: video_id
         description: "MD5 hash key matching dim_videos.video_id"
@@ -10,12 +10,48 @@ seeds:
           - unique
           - not_null
       - name: expected_length_mins
-        description: "Expected final video length in minutes, estimated before production"
+        description: "Expected final video length in minutes, estimated before production. Null for is_complete=0 rows."
         tests:
-          - not_null
-      - name: expected_complexity
-        description: "Subjective complexity rating estimated before production"
+          - not_null:
+              where: "is_complete = 1"
+      - name: complexity_new
+        description: "1 if new video series, first time doing something on-camera or technically, or first time watching the source material. Null for is_complete=0 rows."
+        tests:
+          - not_null:
+              where: "is_complete = 1"
+          - accepted_values:
+              values: [0, 1]
+      - name: complexity_media_depth
+        description: "1 if wide range of topics covered; 0 if narrow/focused scope (e.g. single boss review, single scene breakdown). Null for is_complete=0 rows."
+        tests:
+          - not_null:
+              where: "is_complete = 1"
+          - accepted_values:
+              values: [0, 1]
+      - name: complexity_delivery_style
+        description: "1 if fully scripted and not adlibbing recordings; 0 if notes-based with adlibbed delivery. Null for is_complete=0 rows."
+        tests:
+          - not_null:
+              where: "is_complete = 1"
+          - accepted_values:
+              values: [0, 1]
+      - name: complexity_logistics
+        description: "1 if external disruptions present during production: vacation, travel, or major life events. Null for is_complete=0 rows."
+        tests:
+          - not_null:
+              where: "is_complete = 1"
+          - accepted_values:
+              values: [0, 1]
+      - name: complexity_worklife
+        description: "1 if forced to work in limited intervals due to work-life balance pressures; 0 if free to work without constraints. Primary predictor for total_day_span. Null for is_complete=0 rows."
+        tests:
+          - not_null:
+              where: "is_complete = 1"
+          - accepted_values:
+              values: [0, 1]
+      - name: is_complete
+        description: "1 if the video is fully complete and eligible for modeling. 0 for in-progress or abandoned videos. Used to filter the modeling dataset instead of a hardcoded exclusion list."
         tests:
           - not_null
           - accepted_values:
-              values: ['Low', 'Medium', 'High', 'Very High']
+              values: [0, 1]
