@@ -108,6 +108,14 @@ Two model variants will be compared on walk-forward RMSE:
 
 Primary metric: **RMSE in original hours scale** (symmetric). Log-model predictions are back-transformed via `exp()` before computing RMSE so all models are comparable on the same scale.
 
+```
+RMSE = sqrt( (1/n) * sum( (y_i - ŷ_i)² ) )
+```
+
+RMSE is **model-agnostic** — it only measures the gap between predictions and actuals, regardless of whether the model is Ridge, a decision tree, or anything else. The model's internal mechanism is irrelevant; only the output is evaluated.
+
+Squaring the errors penalizes large misses disproportionately (a 10h error contributes 100 to the sum; a 1h error contributes 1). The square root brings the result back to hours, making it directly interpretable. This asymmetric penalty on large errors is appropriate here — a 15h scheduling miss is far worse than three 5h misses.  This is why we are not using MAE
+
 Target precision: **±5 hours** is the threshold for the model to be considered useful. The meaningful production tiers are roughly 0–10h, 10–20h, 20–30h — a model that can distinguish these reliably is actionable.
 
 Note: underprediction is worse than overprediction in practice (blown schedule vs. pleasant surprise). If two models have similar RMSE, prefer the one with a lower rate of large underpredictions. Check mean signed error (predicted − actual) in post-fit diagnostics.
@@ -118,11 +126,13 @@ Note: underprediction is worse than overprediction in practice (blown schedule v
 
 Compute all three. B1 is the **success criterion** — models must beat it to be considered worthwhile. B2 is computed to validate the decision to use flags over video_type, not as a target to beat.
 
-| ID | Model | Description | Purpose |
-|----|-------|-------------|---------|
-| B0 | Global mean | Predict 17h for every video | Absolute floor |
-| B1 | Mean by length tier | Predict mean `hours_creation` for Short / Average / Long | **Success criterion** |
-| B2 | Mean by video_type | Predict mean `hours_creation` per video_type category | Diagnostic: expected to be noisy (Reviews span 7–53h), confirming video_type groupings are too heterogeneous to use as a standalone lookup |
+| ID | Model | Description | Test RMSE | Purpose |
+|----|-------|-------------|-----------|---------|
+| B0 | Global mean | Predict mean `hours_creation` for every video | 6.50h | Absolute floor |
+| B1 | Mean by length tier | Predict mean `hours_creation` for Short / Average / Long | **5.45h** | **Success criterion** |
+| B2 | Mean by video_type | Predict mean `hours_creation` per video_type category | 6.80h | Diagnostic |
+
+B1 lift over B0: **1.05h**. B2 is worse than B0 (6.80h vs 6.50h), confirming that video_type groupings are too heterogeneous to use as a standalone lookup — Reviews in particular span 7–53h. Any candidate model must beat **5.45h RMSE** to be considered worthwhile. The ±5h usefulness threshold is not yet met by B1 itself, meaning there is meaningful room for the flag-based models to add value.
 
 **How baselines are computed and compared**
 
@@ -157,10 +167,14 @@ All models fit on the training set only (videos 1–73 by `date_first`). Raw and
 
 | ID | Model | Features | Notes |
 |----|-------|----------|-------|
-| L1 | Ridge — flags (Model A) | `expected_length_mins` (tiered) + `complexity_new` + `complexity_media_depth` + `complexity_delivery_style` | Alpha tuned via TimeSeriesSplit within training set. `complexity_new` has weak bivariate signal (r=0.07); Ridge will shrink it — check coefficient magnitude post-fit. |
-| L2 | Ridge — video_type (Model B) | `expected_length_mins` (tiered) + `video_type` dummies (one reference level dropped) | Direct comparison to L1. Less forward-compatible if new video formats are introduced. |
-| T1 | Decision tree | Same as L1 features | Depth 2–3 only. Captures flag interactions (e.g. `media_depth=1 AND delivery_style=1`) without explicit interaction terms. No distributional assumptions. |
-| T2 | Random Forest | Same as L1 features | Only pursued if T1 is competitive. Requires careful `min_samples_leaf` tuning at n=73. |
+| M1 | Ridge — flags | `expected_length_mins` (tiered) + `complexity_new` + `complexity_media_depth` + `complexity_delivery_style` | Alpha tuned via TimeSeriesSplit within training set. `complexity_new` has weak bivariate signal (r=0.07); Ridge will shrink it — check coefficient magnitude post-fit. |
+| M2 | Ridge — video_type | `expected_length_mins` (tiered) + `video_type` dummies (one reference level dropped) | Direct comparison to M1. Less forward-compatible if new video formats are introduced. |
+| M3 | Decision tree | Same as M1 features | Depth 2–3 only. Captures flag interactions (e.g. `media_depth=1 AND delivery_style=1`) without explicit interaction terms. No distributional assumptions. |
+| M4 | Random Forest | Same as M1 features | Only pursued if M3 is competitive. Requires careful `min_samples_leaf` tuning at n=73. |
+
+**Why Ridge over plain OLS:** At n=73 training samples, OLS coefficient estimates are noisy — small samples inflate variance, particularly for sparse binary flags. Ridge adds an L2 penalty that shrinks all coefficients proportionally toward zero, reducing overfitting without eliminating any feature. Alpha (the regularization strength) is not hardcoded; it is tuned via `TimeSeriesSplit` cross-validation within the training set.
+
+**Why Ridge over Lasso:** Lasso (L1 regularization) can zero out features entirely. With only 3–4 carefully selected features, automatic elimination is not desirable — all selected features are expected to carry signal. Ridge retains all features with appropriately shrunk coefficients, which is the right behaviour here.
 
 **Why tree-based is in scope**: complexity flags are unlikely to combine additively. A scripted AND wide-scope video may be disproportionately harder than the sum of each flag alone. Trees find these thresholds naturally; linear models require explicit interaction terms that the parameter budget cannot support.
 
@@ -174,7 +188,7 @@ Two layers of CV, serving different purposes:
 Used for Ridge alpha and tree depth. Use `sklearn.model_selection.TimeSeriesSplit` on the 73-video training set. Prevents data leakage; earlier videos always train, later videos always validate within each fold.
 
 **Layer 2 — Model selection (rolling time-series CV)**
-Used to choose between L1, L2, T1, T2. Produces multiple RMSE estimates per model so the comparison is not decided by one lucky or unlucky 25-video window.
+Used to choose between M1, M2, M3, M4. Produces multiple RMSE estimates per model so the comparison is not decided by one lucky or unlucky 25-video window.
 
 ```
 Fold 1: Train [1–48]  → Test [49–58]   → RMSE per model
@@ -208,9 +222,9 @@ If residuals show systematic bias by `media_type`, revisit splitting into separa
 ### Order of Operations
 
 1. Compute B0, B1, B2 baselines
-2. Run rolling CV (Layer 2) for L1-raw, L1-log, L2-raw, L2-log, T1
+2. Run rolling CV (Layer 2) for M1-raw, M1-log, M2-raw, M2-log, M3
 3. Select winning model by mean rolling CV RMSE
-4. If T1 competitive (within 1h RMSE of best linear), try T2
+4. If M3 competitive (within 1h RMSE of best linear), try M4
 5. Retrain winner on full training set (videos 1–73)
 6. Evaluate once on final holdout (videos 74–98) — report RMSE
 7. Run post-fit diagnostics on winning model

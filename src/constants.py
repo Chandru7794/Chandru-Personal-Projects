@@ -16,3 +16,6 @@ LENGTH_TIER_MAP = {
     30: 'Long',
 }
 LENGTH_TIER_ORDER = ['Short', 'Average', 'Long']
+
+# Ordinal encoding for Ridge regression (preserves tier ordering)
+LENGTH_TIER_ORDINAL = {'Short': 0, 'Average': 1, 'Long': 2}
