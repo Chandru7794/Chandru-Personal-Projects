@@ -28,6 +28,7 @@ All identified data quality issues have been fully resolved. The cleaning pipeli
 ## 3. Column-by-Column Findings
 
 ### 3.1 `media_type`
+**Description:** What type of media video is on (video games, movies, may eventually include tv shows)
 **Issue type:** Duplicate variants, invalid value
 - Two distinct string variants existed for both `"Movies"` and `"Video Games"`, caused by internal extra whitespace in one variant of each.
 - One record with value `"Channel"` was identified as structurally invalid (not a content type).
@@ -37,6 +38,7 @@ All identified data quality issues have been fully resolved. The cleaning pipeli
 ---
 
 ### 3.2 `creation_category`
+**Description:** The specific workflow (editing, recording video, thumbnail).  These need to be normalized
 **Issue type:** Typographical errors (most prevalent column), irrelevant categories
 This was the most data quality-intensive column. Two classes of issues were found:
 
@@ -55,12 +57,12 @@ This was the most data quality-intensive column. Two classes of issues were foun
 
 `Monetization`, `Research Youtube`, `Banner`, `Promoting`, `Video Games`, `Reporting`, `SEO`, `Stats`
 
-> **Note:** `Processing Raw Video` was retained after review, as it was deemed relevant in the context of video game content.
-> **Note:** `Recording Audio` was also retained, despite being sparse in recent records, as it is a legitimate production step.
+**NULL values:** Rows where `creation_category` IS NULL were also dropped explicitly.
 
 ---
 
 ### 3.3 `media_series`
+**Description:** What series it belongs to (ie "Indiana Jones Series")
 **Issue type:** NULL values
 - 6 rows had a NULL `media_series`, indicating records that could not be attributed to any identifiable series.
 
@@ -69,6 +71,7 @@ This was the most data quality-intensive column. Two classes of issues were foun
 ---
 
 ### 3.4 `media_title`
+**Description:** Exact title of movie or video game
 **Issue type:** NULL values, placeholder strings
 - A number of rows contained NULL, `"None"`, or `"Entire Channel"` as the title — none of which represent a specific video.
 - These rows were largely overlapping with the `media_series` NULL rows (6 rows).
@@ -78,6 +81,7 @@ This was the most data quality-intensive column. Two classes of issues were foun
 ---
 
 ### 3.5 `video_type`
+**Description:** A category for the type of video this is ("review", "ranking", "playthrough" etc)
 **Issue type:** NULL values
 - 7 rows had a NULL `video_type`. One additional NULL was traced to a specific Elden Ring video that could not be categorized.
 
@@ -86,6 +90,7 @@ This was the most data quality-intensive column. Two classes of issues were foun
 ---
 
 ### 3.6 `video_subtype`
+**Description:** This is more granular than video type but may not be super generalizable because it often is a one-off.
 **Issue type:** Invalid and ambiguous values
 - Values identified as problematic: `"Multiple"`, `"N/A"`, `"None"`, `"Rebirth"`, `"Superman Movies"`, `"Terminator Movies"`
 
@@ -94,6 +99,7 @@ This was the most data quality-intensive column. Two classes of issues were foun
 ---
 
 ### 3.7 `date`
+**Description:** When  the workflow began
 **Issue type:** NULL values
 - A small number of rows had NULL dates. Context inspection (one row before and after each NULL) confirmed the missing dates were unambiguous and could be forward-filled from the preceding row.
 
@@ -104,6 +110,7 @@ This was the most data quality-intensive column. Two classes of issues were foun
 ---
 
 ### 3.8 `time_start` / `time_end`
+**Description:** time stamps
 **Issue type:** Storage format, midnight-crossing sessions
 
 **Format:** Stored as 12-hour AM/PM strings (e.g., `"10:00:00 PM"`). Converted to 24-hour `HH:MM:SS` strings in `workload_clean` for correct lexicographic sorting and downstream compatibility.
@@ -112,49 +119,29 @@ This was the most data quality-intensive column. Two classes of issues were foun
 
 ---
 
-## 4. Cleaning Rules Summary
+### 3.9 `duration`
+**Description:** a calculated field (within the csv that uses `time_start` and `time_end`)
+**Issue type:** Negative values from midnight-crossing sessions
+- The `duration` column (in minutes) was pre-existing in the source data.
+- Midnight-crossing sessions produced negative values because Excel computed `end - start` as a negative fraction of a day.
+- Zero-duration sessions and sessions exceeding 4 hours were also flagged for review.
 
-| # | Rule | Action |
-|---|---|---|
-| 1 | `creation_category` typos and irrelevant values | Remap or drop |
-| 2 | `media_series` IS NULL | Drop row |
-| 3 | `media_title` IS NULL, `"None"`, or `"Entire Channel"` | Drop row |
-| 4 | `video_type` IS NULL | Drop row |
-| 5 | `video_subtype` IN (`"Multiple"`, `"N/A"`) | Drop row |
-| 6 | `media_type` variants of `"Movies"`, `"Video Games"`, `"Channel"` | Normalize or drop |
-| 7 | `date` NULLs | Forward-fill from prior row |
-| 8 | `time_start` / `time_end` AM/PM string format | Convert to 24-hour `HH:MM:SS` |
-| 9 | `creation_category` IS NULL | Drop row |
-| 10 | `duration` negative for midnight-crossing sessions | Add 1440 minutes to correct |
-| 11 | Exact duplicate rows | Deduplicated via `SELECT DISTINCT` into `workload_deduped` |
+**Resolution:** Negative values corrected by adding 1440 minutes in `workload_durations_fixed` (Stage 3 of the cleaning pipeline).
 
 ---
 
-## 5. Gaps and Recommendations
+### 3.10 Duplicate Rows
+**Issue type:** Exact duplicate records
+- Exact duplicate rows were detected via `GROUP BY` on all key identifying columns.
 
-All previously identified gaps have been resolved. The table below summarises their disposition:
-
-### 5.1 `video_subtype` — Resolved
-`"None"`, `"Rebirth"`, `"Superman Movies"`, and `"Terminator Movies"` were corrected directly in the source CSV.
-
-### 5.2 Session Duration Validation — Resolved
-A pre-existing `duration` column (in minutes) was validated. Negative values caused by midnight-crossing sessions (where Excel computed `end - start` as a negative fraction of a day) were corrected by adding 1440 minutes. Zero-duration and sessions exceeding 4 hours were flagged for review.
-
-### 5.3 Duplicate Row Detection — Resolved
-Exact duplicate rows were detected via `GROUP BY` on all key identifying columns. Duplicates were removed using `SELECT DISTINCT *` into a new table `workload_deduped`, which is the authoritative table for all downstream modeling.
-
-### 5.4 Temporal Coverage — Resolved
-Record counts by `month_year` and overall date range were queried to confirm dataset coverage and identify any gaps.
-
-### 5.5 Midnight Date Correction — Resolved
-Confirmed no longer an issue; corrected in source data.
-
-### 5.6 `creation_category` NULL Handling — Resolved
-NULL `creation_category` rows are now explicitly dropped in `workload_clean` via `AND creation_category IS NOT NULL`.
+**Resolution:** Duplicates removed using `SELECT DISTINCT *` into `workload_deduped`, which is the authoritative table for all downstream modeling.
 
 ---
 
-## 6. Data Quality Summary
+
+---
+
+## 4. Data Quality Summary
 
 | Dimension | Assessment |
 |---|---|
@@ -167,119 +154,15 @@ NULL `creation_category` rows are now explicitly dropped in `workload_clean` via
 
 ---
 
-## 7. Data Cleaning Pipeline
 
-The raw CSV passes through four sequential cleaning stages before reaching the modeling-ready table. Each stage produces a named table that downstream steps build upon.
 
-```
-Workload.csv
-    └── workload                   (raw load)
-        └── workload_clean         (stage 1: column normalization + row filters)
-            └── workload_dates_filled      (stage 2: null date fill + month_year)
-                └── workload_durations_fixed   (stage 3: duration correction)
-                    └── workload_deduped       (stage 4: deduplication)
-                        └── workload_islands   (stage 5: gap detection + island assignment)
-                            └── workload_combined  (stage 6: session aggregation) ← use this
-```
+## 5. Combined Session Analysis
 
----
-
-### Stage 0 — Source CSV Fixes
-Applied directly in `Workload.csv` before any SQL processing:
-
-| Field | Fix |
-|---|---|
-| `video_subtype` | Removed invalid values: `"None"`, `"Rebirth"`, `"Superman Movies"`, `"Terminator Movies"` |
-| `time_start` / `time_end` | Corrected midnight-crossing session dates |
-
----
-
-### Stage 1 — `workload_clean`
-Row filters (rows dropped if any condition is met):
-
-| Column | Condition |
-|---|---|
-| `media_series` | IS NULL |
-| `media_title` | IS NULL, `"None"`, or `"Entire Channel"` |
-| `video_type` | IS NULL |
-| `video_subtype` | IN (`"Multiple"`, `"N/A"`) |
-| `media_type` | `"Channel"` |
-| `creation_category` | IN (`"Monetization"`, `"Research Youtube"`, `"Banner"`, `"Promoting"`, `"Video Games"`, `"Reporting"`, `"SEO"`, `"Stats"`) |
-| `creation_category` | IS NULL |
-
-Column transformations:
-
-| Column | Transformation |
-|---|---|
-| `media_type` | Normalized `"Movies"` and `"Video Games"` variants via pattern matching |
-| `creation_category` | 14 typo/variant values remapped to 6 canonical labels |
-| `time_start` | Converted from 12-hour AM/PM string to 24-hour `HH:MM:SS` |
-| `time_end` | Converted from 12-hour AM/PM string to 24-hour `HH:MM:SS` |
-
----
-
-### Stage 2 — `workload_dates_filled`
-
-| Column | Transformation |
-|---|---|
-| `date` | NULL values forward-filled from the last non-null date above each row |
-| `month_year` | New derived column added (`YYYY_MM` format) |
-
----
-
-### Stage 3 — `workload_durations_fixed`
-
-| Column | Transformation |
-|---|---|
-| `duration` | Negative values (midnight-crossing sessions) corrected by adding 1440 minutes |
-
----
-
-### Stage 4 — `workload_deduped`
-
-| Action | Detail |
-|---|---|
-| Exact duplicate removal | `SELECT DISTINCT *` applied across all columns |
-
----
-
-### Stage 5 — `workload_islands`
-
-Intermediate table used to detect which sessions belong to the same logical work block before aggregation.
-
-| Column added | Description |
-|---|---|
-| `ts_start` | `date + time_start` cast to TIMESTAMP — the true session start |
-| `ts_end_computed` | `ts_start + duration` in minutes — avoids midnight-crossing issues with the stored `time_end` |
-| `gap_from_prev_minutes` | Minutes between the previous session's `ts_end_computed` and the current `ts_start`, within the same workflow partition |
-| `island_id` | Cumulative sum of new-island flags within each workflow partition — uniquely identifies each combined group |
-
-Partitioned by: `media_title`, `video_type`, `video_subtype`, `creation_category`
-Ordered by: `ts_start`
-
----
-
-### Stage 6 — `workload_combined`
-
-One row per logical work block (island). Single sessions pass through unchanged (`sessions_combined = 1`).
-
-| Column | Aggregation |
-|---|---|
-| `time_start` | `MIN(time_start)` — earliest start in the group |
-| `time_end` | `MAX(time_start)` — start of the last session in the group |
-| `duration` | `SUM(duration)` — total work time across all sessions in the group |
-| `date`, `month_year`, `media_type`, `media_series` | `MIN(...)` — identical within a group; MIN selects one value |
-| `sessions_combined` | Count of raw sessions merged into this row |
-
----
-
-## 8. Combined Session Analysis
-
-### 8.1 Concept
+### 5.1 Concept
 
 A **combined session** is a logical work block formed by merging two or more consecutive raw sessions that share the same workflow (identical `media_title`, `video_type`, `video_subtype`, and `creation_category`) and are separated by a gap of ≤15 minutes. The 15-minute threshold reflects the reality that short breaks within the same task (e.g., a quick pause mid-edit) are part of one continuous work effort rather than distinct sessions.
 
-### 8.2 Distribution of Group Sizes
+### 5.2 Distribution of Group Sizes
 
 The frequency distribution of how many raw sessions get grouped into each combined session:
 
@@ -292,7 +175,7 @@ The frequency distribution of how many raw sessions get grouped into each combin
 
 Roughly **34% of raw sessions are part of a combined group**, meaning a substantial share of the logged effort represents fragmented work on the same task within a single sitting.
 
-### 8.3 Aggregation Rules
+### 5.3 Aggregation Rules
 
 When sessions are merged, the combined row is constructed as follows:
 

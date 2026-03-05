@@ -45,6 +45,34 @@ SELECT -- noqa: LT08
     ) + 1 AS total_day_span,
     COUNT(DISTINCT date_workflow) AS active_days_worked,
 
+    -- Model targets
+    -- hours_creation: primary target — pre-processing + processing only.
+    -- creation_day_span: secondary target — calendar days from first to last creation session.
+    --   Use this instead of total_day_span, which is inflated by thumbnail/subtitle
+    --   sessions that can occur years after the main work is done.
+    ROUND(SUM(CASE
+        WHEN processing_type IN ('Pre-Processing', 'Processing')
+            THEN duration
+        ELSE 0
+    END) / 60.0, 2) AS hours_creation,
+    DATEDIFF(
+        'day',
+        MIN(
+            CASE
+                WHEN
+                    processing_type IN ('Pre-Processing', 'Processing')
+                    THEN date_workflow
+            END
+        ),
+        MAX(
+            CASE
+                WHEN
+                    processing_type IN ('Pre-Processing', 'Processing')
+                    THEN date_workflow
+            END
+        )
+    ) + 1 AS creation_day_span,
+
     -- Hours by creation_category
     ROUND(SUM(CASE
         WHEN creation_category = 'Editing'

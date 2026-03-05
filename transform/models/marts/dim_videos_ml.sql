@@ -12,13 +12,23 @@ labels as (
     select
         video_id,
         expected_length_mins,
-        expected_complexity
+        complexity_new,
+        complexity_media_depth,
+        complexity_delivery_style,
+        complexity_logistics,
+        complexity_worklife,
+        is_complete
     from {{ ref('video_labels') }}
 )
 
 select
     v.*,
     l.expected_length_mins,
-    l.expected_complexity
+    l.complexity_new,
+    l.complexity_media_depth,
+    l.complexity_delivery_style,
+    l.complexity_logistics,
+    l.complexity_worklife,
+    l.is_complete
 from videos as v
 left join labels as l on v.video_id = l.video_id
