@@ -1,0 +1,24 @@
+{
+  "model_id": "yt_hours_ridge_v1",
+  "model_class": "RidgeCV",
+  "target": "hours_creation",
+  "features": [
+    "length_tier_ord",
+    "complexity_new",
+    "complexity_media_depth",
+    "complexity_delivery_style"
+  ],
+  "alpha": 0.719686,
+  "intercept": 7.780522,
+  "coefficients": {
+    "length_tier_ord": 4.448954,
+    "complexity_new": 2.959246,
+    "complexity_media_depth": 5.864206,
+    "complexity_delivery_style": 3.422362
+  },
+  "holdout_rmse": 4.6835,
+  "baseline_rmse": 5.45,
+  "train_n": 73,
+  "test_n": 25,
+  "notes": "Baseline RMSE determined through mean RMSE by length_tierTrained on videos sorted by date_first. length_tier_ord: Short=0, Average=1, Long=2. All complexity flags are binary (0/1). Rising CV fold RMSE reflects historical production maturation; process considered stable as of 2026."
+}

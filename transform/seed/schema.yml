@@ -4,10 +4,17 @@ seeds:
   - name: video_labels
     description: "Manually labeled features for ML modeling. One row per video. Incomplete/in-progress videos are included with is_complete=0 and null labels."
     columns:
-      - name: video_id
-        description: "MD5 hash key matching dim_videos.video_id"
+      - name: media_title
+        description: "Video title — part of natural key (media_title, video_type, video_subtype)"
         tests:
-          - unique
+          - not_null
+      - name: video_type
+        description: "Video type — part of natural key"
+        tests:
+          - not_null
+      - name: video_subtype
+        description: "Video subtype — part of natural key"
+        tests:
           - not_null
       - name: expected_length_mins
         description: "Expected final video length in minutes, estimated before production. Null for is_complete=0 rows."
