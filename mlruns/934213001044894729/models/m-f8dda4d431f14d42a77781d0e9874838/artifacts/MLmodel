@@ -1,0 +1,23 @@
+artifact_path: file:///C:\Machine Learning Projects\YouTube Workload\mlruns/934213001044894729/models/m-f8dda4d431f14d42a77781d0e9874838/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.14.3
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.8.0
+    skops_trusted_types: null
+mlflow_version: 3.10.1
+model_id: m-f8dda4d431f14d42a77781d0e9874838
+model_size_bytes: 146439
+model_uuid: m-f8dda4d431f14d42a77781d0e9874838
+prompts: null
+run_id: 77c9d5e5cd2f4880a21a9b9ff960f808
+utc_time_created: '2026-03-11 13:07:38.689205'

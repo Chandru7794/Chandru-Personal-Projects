@@ -1,0 +1,22 @@
+{
+  "model_id": "yt_hours_ridge_vtype_v1",
+  "model_class": "RidgeCV",
+  "target": "hours_creation",
+  "features": [
+    "length_tier_ord",
+    "vtype_Playthrough",
+    "vtype_Rankings"
+  ],
+  "alpha": 0.001,
+  "intercept": 11.980369,
+  "coefficients": {
+    "length_tier_ord": 9.154016,
+    "vtype_Playthrough": -2.106371,
+    "vtype_Rankings": -11.588696
+  },
+  "holdout_rmse": 5.4947,
+  "b1_rmse": 5.45,
+  "train_n": 73,
+  "test_n": 25,
+  "notes": "Alternative to M1-raw. Uses video_type one-hot dummies instead of complexity flags. Holdout RMSE slightly worse than M1-raw; rejected as production model. Serialized for monitoring comparison only. vtype_Scene_Breakdown had zero variance in training (test-only category)."
+}

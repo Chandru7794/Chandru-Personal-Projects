@@ -1,0 +1,7 @@
+artifact_location: file:///C:\Machine Learning Projects\YouTube Workload\mlruns/137118561776772715
+creation_time: 1773239823931
+experiment_id: '137118561776772715'
+last_update_time: 1773239823931
+lifecycle_stage: active
+name: yt-hours-monitoring
+workspace: default

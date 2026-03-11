@@ -185,6 +185,8 @@ This is the highest priority action — all distributions and model targets are 
 
 The notebook notes a "big difference between movies and video games." All EDA and modelling should separate these two groups. A pooled model without `media_type` as a feature will likely underperform significantly.
 
+However, further EDA shows that `media_type` is almost entirely correlated with temporal pattern.  All but 1 video game video was done prior to movie videos.
+
 ### 8.4 Examine `total_hours` Distribution Per Video Type
 
 `Review`, `Playthrough`, `Rankings`, and `Scene Breakdown` likely have very different production time profiles. The distribution of `total_hours` within each `video_type` × `media_type` combination has not yet been plotted. Box plots or violin plots stratified this way are the natural next step.

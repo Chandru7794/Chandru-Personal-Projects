@@ -1,0 +1,14 @@
+artifact_uri: file:///C:\Machine Learning Projects\YouTube Workload\mlruns/934213001044894729/79b2758266114787b4a46fecd66caaa9/artifacts
+end_time: 1773234503161
+entry_point_name: ''
+experiment_id: '934213001044894729'
+lifecycle_stage: active
+run_id: 79b2758266114787b4a46fecd66caaa9
+run_name: holdout_M3b
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1773234497173
+status: 3
+tags: []
+user_id: chand

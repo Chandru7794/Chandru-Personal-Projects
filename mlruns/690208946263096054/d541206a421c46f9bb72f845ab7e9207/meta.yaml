@@ -1,0 +1,14 @@
+artifact_uri: file:///C:\Machine Learning Projects\YouTube Workload\mlruns/690208946263096054/d541206a421c46f9bb72f845ab7e9207/artifacts
+end_time: 1773232102845
+entry_point_name: ''
+experiment_id: '690208946263096054'
+lifecycle_stage: active
+run_id: d541206a421c46f9bb72f845ab7e9207
+run_name: cv_M1-log
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1773232102759
+status: 3
+tags: []
+user_id: chand

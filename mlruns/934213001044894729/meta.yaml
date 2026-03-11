@@ -1,0 +1,7 @@
+artifact_location: file:///C:\Machine Learning Projects\YouTube Workload\mlruns/934213001044894729
+creation_time: 1773234314976
+experiment_id: '934213001044894729'
+last_update_time: 1773234314976
+lifecycle_stage: active
+name: yt-hours-trees
+workspace: default

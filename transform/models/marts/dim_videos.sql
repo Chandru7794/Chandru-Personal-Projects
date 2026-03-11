@@ -47,8 +47,8 @@ SELECT -- noqa: LT08
 
     -- Model targets
     -- hours_creation: primary target — pre-processing + processing only.
-    -- creation_day_span: secondary target — calendar days from first to last creation session.
-    --   Use this instead of total_day_span, which is inflated by thumbnail/subtitle
+    -- creation_day_span: secondary target 
+    --   Use this instead of total_day_span, which is inflated
     --   sessions that can occur years after the main work is done.
     ROUND(SUM(CASE
         WHEN processing_type IN ('Pre-Processing', 'Processing')
