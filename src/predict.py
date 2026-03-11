@@ -11,7 +11,7 @@ import json
 import pathlib
 import joblib
 import duckdb
-import pandas as pd
+#import pandas as pd
 
 # --- Paths ---
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -66,7 +66,7 @@ for _, row in df.sort_values("predicted_hours", ascending=False).iterrows():
     tier = row.get("length_tier") or "?"
     pred = row["predicted_hours"]
     print(
-        f"{str(row['media_title']):<45} "
+        f"{str(row['media_title']):<60} "
         f"{str(row['video_type']):<18} "
         f"{str(row['video_subtype']):<30} "
         f"{tier:<9} "

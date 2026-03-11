@@ -1,0 +1,10 @@
+artifact_location: file:///C:\Machine Learning Projects\YouTube Workload\mlruns/934213001044894729/models/m-e74f1329d2914db5840be625b3058f61/artifacts
+creation_timestamp: 1773234497619
+experiment_id: '934213001044894729'
+last_updated_timestamp: 1773234503141
+model_id: m-e74f1329d2914db5840be625b3058f61
+model_type: null
+name: model
+source_run_id: 79b2758266114787b4a46fecd66caaa9
+status: 2
+status_message: null

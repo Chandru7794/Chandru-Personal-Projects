@@ -381,3 +381,53 @@ These can be read off a planned video and summed to get a prediction without run
 The primary risk for M1-raw is renewed drift: if production pace changes again (new equipment, new workflow, new complexity flag combinations), the flag→hours coefficients will become stale. Monitor by:
 - Tracking mean residual on new videos over rolling 10-video windows. If mean residual drifts consistently positive (underpredicting), refit.
 - Re-evaluating M3b if `complexity_delivery_style` becomes the dominant driver — trees will handle non-linear interactions better if that flag starts interacting strongly with length tier.
+
+Run `python src/monitor.py` after each completed video is marked `is_complete = 1` in `video_labels.csv`.
+
+---
+
+## Retraining Plan
+
+### Train/Test Split Strategy
+
+The original split was: Train = videos 1–73 (sorted by `date_first`, up to 2025-01-20), Test = videos 74–98 (most recent 25).
+
+**The split is not fixed forever.** As new videos are completed, the content variety is expanding — new video types and delivery styles are being introduced. This means temporal effects are ongoing, not just a historical learning curve. New data belongs at the recent end of the timeline, not retrofitted into the old training set.
+
+**Correct approach — sliding window re-split at each retrain:**
+
+At every retrain cycle, re-sort all completed videos by `date_first` and re-cut:
+- **Test = most recent 25 videos** (grows toward ~20% of total N as the dataset scales)
+- **Train = all completed videos before the test window**
+
+New completed videos land at the recent end. At the next retrain, the split moves forward: the oldest test-set videos graduate into training, and the newest completed videos become the test set. New videos are never directly appended to the old training set — they always enter through the test end first.
+
+This preserves the invariant that the holdout is always the most recent, most challenging data. New video types that appear after the original training cutoff will stress-test the model honestly from day one.
+
+### Retrain trigger
+
+Retrain every **5 newly completed videos**. At n=73 training, each batch of 5 represents ~7% new data — enough to meaningfully update coefficients without overreacting to any single video. After 2–3 retraining cycles, move to every **10 videos** as the dataset stabilises.
+
+Retrain also if `src/monitor.py` flags either:
+- Rolling mean residual > ±2h over last 10 videos
+- Rolling RMSE exceeds B1 (5.45h)
+
+### Retrain procedure
+
+1. Mark new completed videos `is_complete = 1` in `video_labels.csv`; run `dbt seed --full-refresh && dbt run`
+2. Re-cut the split: sort all completed videos by `date_first`, hold out most recent 25, train on the rest
+3. Re-run the full CV and fitting procedure in `modeling_linear.ipynb` (and `modeling_trees.ipynb` if evaluating all three models)
+4. Log the run in MLflow: alpha selected, CV RMSE per fold, holdout RMSE, train N, test N
+5. Compare new holdout RMSE to current production model — only promote if new RMSE ≤ current RMSE
+6. If promoted: serialize new artifact (e.g. `yt_hours_ridge_v2.pkl`), update `src/predict.py` `MODEL_ID`, keep previous version in `artifacts/` until v2 is validated over ≥10 production videos
+
+### Test set sizing as N grows
+
+| Total completed N | Holdout size | Notes |
+|---|---|---|
+| ~100 (current) | 25 | ~25% — acceptable at small N |
+| ~150 | 30 | Move up when N crosses 125 |
+| ~200 | 40 | ~20% target |
+| 250+ | ~20% of total | Maintain floor of 25 |
+
+Do not shrink training below 60 videos — Ridge becomes unreliable with fewer degrees of freedom than that.

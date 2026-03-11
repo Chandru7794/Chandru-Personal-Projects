@@ -17,8 +17,9 @@
     "complexity_delivery_style": 3.422362
   },
   "holdout_rmse": 4.6835,
-  "baseline_rmse": 5.45,
+  "b1_rmse": 5.45,
   "train_n": 73,
   "test_n": 25,
-  "notes": "Baseline RMSE determined through mean RMSE by length_tierTrained on videos sorted by date_first. length_tier_ord: Short=0, Average=1, Long=2. All complexity flags are binary (0/1). Rising CV fold RMSE reflects historical production maturation; process considered stable as of 2026."
+  "train_cutoff": "2025-01-20",
+  "notes": "Trained on videos sorted by date_first. length_tier_ord: Short=0, Average=1, Long=2. All complexity flags are binary (0/1). Rising CV fold RMSE reflects historical production maturation; process considered stable as of 2026."
 }

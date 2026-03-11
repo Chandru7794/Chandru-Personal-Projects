@@ -1,0 +1,14 @@
+artifact_uri: file:///C:\Machine Learning Projects\YouTube Workload\mlruns/690208946263096054/1926cd8b4d754eaf939d10384952d529/artifacts
+end_time: 1773232290092
+entry_point_name: ''
+experiment_id: '690208946263096054'
+lifecycle_stage: active
+run_id: 1926cd8b4d754eaf939d10384952d529
+run_name: holdout_M2-raw
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1773232284520
+status: 3
+tags: []
+user_id: chand

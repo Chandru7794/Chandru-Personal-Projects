@@ -1,0 +1,21 @@
+{
+  "model_id": "yt_hours_rf_flags_v1",
+  "model_class": "RandomForestRegressor",
+  "target": "hours_creation",
+  "features": [
+    "length_tier_ord",
+    "complexity_new",
+    "complexity_media_depth",
+    "complexity_delivery_style"
+  ],
+  "best_params": {
+    "max_depth": 2,
+    "min_samples_leaf": 2,
+    "n_estimators": 200
+  },
+  "holdout_rmse": 4.9378,
+  "b1_rmse": 5.45,
+  "train_n": 73,
+  "test_n": 25,
+  "notes": "Alternative to M1-raw. Random Forest on same flags+length features as Ridge. Holdout RMSE worse than M1-raw; rejected as production model. Serialized for monitoring comparison only. Feature set identical to M1-raw: length_tier_ord + 3 complexity flags."
+}

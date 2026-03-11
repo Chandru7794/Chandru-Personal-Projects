@@ -1,0 +1,7 @@
+artifact_location: file:///C:\Machine Learning Projects\YouTube Workload\mlruns/690208946263096054
+creation_time: 1773232040113
+experiment_id: '690208946263096054'
+last_update_time: 1773232040113
+lifecycle_stage: active
+name: yt-hours-linear
+workspace: default
