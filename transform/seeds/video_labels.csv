@@ -1,9 +1,12 @@
 media_title,video_type,video_subtype,expected_length_mins,complexity_new,complexity_media_depth,complexity_delivery_style,complexity_logistics,complexity_worklife,is_complete
 A Nightmare on Elm Street,Review,3 Things,15,1,1,0,0,1,1
-A Nightmare on Elm Street,Scene Breakdown,Freddy's Introduction,7,0,0,0,1,0,0
+A Nightmare on Elm Street,Scene Breakdown,Freddy's Introduction,7,0,0,0,1,0,1
 A Nightmare on Elm Street,Stats,Nightmare on Elm Street,15,1,0,0,0,0,0
-A Nightmare on Elm Street 2:  Freddy's Revenge,Review,3 Things,15,0,1,0,1,0,0
-A Nightmare on Elm Street 2:  Freddy's Revenge,Scene Breakdown,Freddy's Introduction,7,0,0,0,1,0,0
+A Nightmare on Elm Street 2:  Freddy's Revenge,Review,3 Things,15,0,1,0,1,0,1
+A Nightmare on Elm Street 2:  Freddy's Revenge,Scene Breakdown,Freddy's Introduction,7,0,0,0,1,0,1
+A Nightmare on Elm Street 3:  Dream Warriors,Scene Breakdown,Freddy's Introduction,7,0,0,0,0,0,1
+A Nightmare on Elm Street 4: The  Dream Master,Scene Breakdown,Freddy's Introduction,10,0,1,0,0,1,1
+A Nightmare on Elm Street,Rankings,Scene Rankings,20,0,1,0,0,1,0
 Baldur's Gate 3,Playthrough,Character Creation,10,1,1,1,0,0,1
 Baldur's Gate 3,Playthrough,Nautiloid Ship,20,1,1,1,1,0,1
 Elden Ring,Playthrough,Deaths 01,10,1,1,1,0,0,1
